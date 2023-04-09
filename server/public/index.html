@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+
+    <title> Project </title>
+
+</head>
+
+
+<body>
+
+<script type = "text/javascript">
+
+async function newUser() {
+    var user_name = document.getElementById('inputName').value;
+    var user_password = document.getElementById('inputPassword').value;
+    var message = { user_name, user_password };
+    console.log(message);
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    };
+    const response = await fetch('/newUser', options);
+    console.log(await response.json())
+};
+
+async function newChannel() {
+    var channel_name = document.getElementById('channel_name').value;
+    var member_id = 1;
+    var message = { channel_name, member_id };
+    console.log(message);
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    };
+    const response = await fetch('/newChannel', options);
+    console.log(await response.json())
+    showChannels();
+};
+
+async function showChannels() {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    const response = await fetch('/showChannels', options);
+    const channel_array = await response.json();
+
+    let channels=''
+    channel_array.forEach((channel) => {
+        channels += `<option value=${channel.channel_id}>${channel.channel_name}</option> `;
+    })
+
+    document.getElementById('channels').innerHTML = channels;
+};
+
+
+async function newMessage() {
+    var message_text = document.getElementById('text').value;
+    var channel_id = document.getElementById('channels').value;
+    var owner_id = 1;
+    var message = { message_text, channel_id, owner_id };
+    console.log(message);
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    };
+    const response = await fetch('/newMessage', options);
+    console.log(await response.json())
+};
+
+</script>
+
+<div id="user_creation">
+    <h1>New User</h1>
+    <h2> Name </h2>
+    <input id="inputName" name="name" value=""> <br>
+    <h2> Password</h2>
+    <input id="inputPassword" name="password" value="">  <br> <br>
+    <button onclick= "newUser()"> Create New User </button>
+</div>
+<br> <br>
+<div id="channel_creation">
+    <h1>New Channel</h1>
+    <h2> Channel Name </h2>
+    <input id="channel_name" name="name" value=""> <br> <br>
+    <button onclick= "newChannel()"> Create New Channel </button>
+</div>
+<br> <br>
+<div id="chatroom">
+    <h1>Chatroom</h1>
+    <div id="channel_dropmenu">
+        <label for="channels"> Select Channel </label>
+        <select name="channels" id="channels">
+    
+        </select>
+        <button onclick="showChannels()">Update Channels</button>
+    </div>
+    <br>
+    <p id="chat"></p> <br> <br>
+    <input id="text" value=""> <button onclick="newMessage()"> Send </button>
+</div>
+
+<br> <br>
+<br> <br>
+<br> <br>
+
+<br> <br>
+<br> <br>
+<br> <br>
+</body>
+
+</html>
